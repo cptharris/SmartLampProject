@@ -33,7 +33,7 @@ void rainbow7(uint16_t i) {
   }
 }
 
-void loop() {
+float getCM() {
   // request data from rangefinder
   digitalWrite(TrigPin, LOW);
   delayMicroseconds(2);
@@ -41,22 +41,23 @@ void loop() {
   delayMicroseconds(10);
   digitalWrite(TrigPin, LOW);
 
-  cm = pulseIn(EchoPin, HIGH) / 58.0;  //The echo time is converted into cm
-  cm = (int(cm * 100.0)) / 100.0;
+  // echo time is converted into cm
+  return (int((pulseIn(EchoPin, HIGH) / 58.0) * 100.0)) / 100.0;
   // Keep two decimal places
-  Serial.println(cm);
+}
 
-  if (cm < 100) {
-    // starting at i, draw the 7 color rainbow
-    // a seven segment rainbow with red on the highest pixel
-    for (int i = 0; i < NUMBER_PIXELS; i++) {
+void loop() {
+  for (int i = 0; i < NUMBER_PIXELS;) {
+    cm = getCM();
+    Serial.print("\t");
+    Serial.println(cm);
+
+    if (cm < 100) {
       rainbow7(i);
       strip.show();
-      delay(500);
-      strip.clear();
-      strip.show();
+      i++;
     }
-  } else {
+    delay(500);
     strip.clear();
     strip.show();
   }
