@@ -41,13 +41,4 @@ void loop() {
     strip.clear();
     strip.show();
   }
-
-  // for (int i = 0; i < 1000; i++) {
-  //   i %= NUMBER_PIXELS;
-  //   rainbow7(i);
-  //   strip.show();
-  //   delay(500);
-  //   strip.clear();
-  //   strip.show();
-  // }
 }

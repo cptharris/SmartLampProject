@@ -3,8 +3,8 @@
 #define NUMBER_PIXELS 60
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUMBER_PIXELS, LEDPIN, NEO_GRB + NEO_KHZ800);
 
-const int TrigPin = 2;
-const int EchoPin = 3;
+const int TrigPin = 3;
+const int EchoPin = 2;
 float cm;
 int delayTime = 200;
 int wait = 500;
@@ -16,14 +16,6 @@ void setup() {
   pinMode(EchoPin, INPUT);
   strip.begin();
   pinMode(LED_BUILTIN, OUTPUT);
-
-
-  // turn the strip on
-  digitalWrite(TrigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(TrigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(TrigPin, LOW);
 }
 
 void rainbow7(uint16_t i) {
@@ -42,28 +34,25 @@ void rainbow7(uint16_t i) {
 }
 
 void loop() {
-  // for (int i = 0; i < NUMBER_PIXELS; i++) {
-  //   strip.setPixelColor(i, 50, 50, 50);
-  //   Serial.println(i);
-  //   delay(200);
-  //   strip.show();
-  // }
-  // strip.clear();
+  // request data from rangefinder
+  digitalWrite(TrigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TrigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TrigPin, LOW);
 
   cm = pulseIn(EchoPin, HIGH) / 58.0;  //The echo time is converted into cm
   cm = (int(cm * 100.0)) / 100.0;
   // Keep two decimal places
-  // Serial.println(cm);
+  Serial.println(cm);
 
-  // if (cm < 100) {
-  if (true) {
+  if (cm < 100) {
     // starting at i, draw the 7 color rainbow
     // a seven segment rainbow with red on the highest pixel
-    for (int i = 0; i < 999999999; i++) {
-      i %= NUMBER_PIXELS;
+    for (int i = 0; i < NUMBER_PIXELS; i++) {
       rainbow7(i);
       strip.show();
-      delay(wait);
+      delay(500);
       strip.clear();
       strip.show();
     }
