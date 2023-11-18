@@ -23,13 +23,15 @@ void setup() {
 
 void rainbow7(uint16_t i) {
   // we use the modulo function with this
-  strip.setPixelColor((i + 0) % NUMBER_PIXELS, 025, 000, 025);  // violet
-  strip.setPixelColor((i + 1) % NUMBER_PIXELS, 255, 000, 255);  // indigo
-  strip.setPixelColor((i + 2) % NUMBER_PIXELS, 000, 000, 150);  // blue
-  strip.setPixelColor((i + 3) % NUMBER_PIXELS, 000, 150, 000);  // green
-  strip.setPixelColor((i + 3) % NUMBER_PIXELS, 255, 255, 000);  // yellow
-  strip.setPixelColor((i + 4) % NUMBER_PIXELS, 110, 070, 000);  // orange
-  strip.setPixelColor((i + 6) % NUMBER_PIXELS, 150, 000, 000);  // red
+  for (int s = 0; s < NUMBER_PIXELS / 7; s++) {
+    strip.setPixelColor((s * 7 + i + 0) % NUMBER_PIXELS, 025, 000, 025);  // violet
+    strip.setPixelColor((s * 7 + i + 1) % NUMBER_PIXELS, 255, 000, 255);  // indigo
+    strip.setPixelColor((s * 7 + i + 2) % NUMBER_PIXELS, 000, 000, 150);  // blue
+    strip.setPixelColor((s * 7 + i + 3) % NUMBER_PIXELS, 000, 150, 000);  // green
+    strip.setPixelColor((s * 7 + i + 4) % NUMBER_PIXELS, 255, 255, 000);  // yellow
+    strip.setPixelColor((s * 7 + i + 5) % NUMBER_PIXELS, 110, 070, 000);  // orange
+    strip.setPixelColor((s * 7 + i + 6) % NUMBER_PIXELS, 150, 000, 000);  // red
+  }
 }
 
 float getCM() {
@@ -62,6 +64,7 @@ void loop() {
 
   if (state) {
     rainbow7(i);
+    i++;
   } else {
     strip.clear();
   }
