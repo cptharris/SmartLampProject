@@ -13,6 +13,12 @@ int i = 0;
 
 bool state = false;
 
+unsigned long next_range_check = millis();
+
+/*
+
+*/
+
 void setup() {
   Serial.begin(9600);
   pinMode(TrigPin, OUTPUT);
@@ -23,14 +29,13 @@ void setup() {
 
 void rainbow7(uint16_t i) {
   // we use the modulo function with this
-  for (int s = 0; s < NUMBER_PIXELS / 7; s++) {
-    strip.setPixelColor((s * 7 + i + 0) % NUMBER_PIXELS, 025, 000, 025);  // violet
-    strip.setPixelColor((s * 7 + i + 1) % NUMBER_PIXELS, 255, 000, 255);  // indigo
-    strip.setPixelColor((s * 7 + i + 2) % NUMBER_PIXELS, 000, 000, 150);  // blue
-    strip.setPixelColor((s * 7 + i + 3) % NUMBER_PIXELS, 000, 150, 000);  // green
-    strip.setPixelColor((s * 7 + i + 4) % NUMBER_PIXELS, 255, 255, 000);  // yellow
-    strip.setPixelColor((s * 7 + i + 5) % NUMBER_PIXELS, 110, 070, 000);  // orange
-    strip.setPixelColor((s * 7 + i + 6) % NUMBER_PIXELS, 150, 000, 000);  // red
+  for (int s = 0; s < NUMBER_PIXELS / 6; s++) {
+    strip.setPixelColor((s * 6 + i + 0) % NUMBER_PIXELS, 255, 000, 255);  // indigo
+    strip.setPixelColor((s * 6 + i + 1) % NUMBER_PIXELS, 000, 000, 150);  // blue
+    strip.setPixelColor((s * 6 + i + 2) % NUMBER_PIXELS, 000, 150, 000);  // green
+    strip.setPixelColor((s * 6 + i + 3) % NUMBER_PIXELS, 255, 255, 000);  // yellow
+    strip.setPixelColor((s * 6 + i + 4) % NUMBER_PIXELS, 110, 070, 000);  // orange
+    strip.setPixelColor((s * 6 + i + 5) % NUMBER_PIXELS, 150, 000, 000);  // red
   }
 }
 
@@ -48,14 +53,18 @@ float getCM() {
 }
 
 void loop() {
-  cm = getCM();
-  Serial.print("\t");
-  Serial.print(state);
-  Serial.print("\t");
-  Serial.println(cm);
-
-  if (cm < minCM) {
-    state = !state;
+  if (true || millis() >= next_range_check) {
+    cm = getCM();
+    Serial.print("\t");
+    Serial.print(state);
+    Serial.print("\t");
+    Serial.println(cm);
+    if (cm < minCM) {
+      state = !state;
+      next_range_check += 500;
+    } else {
+      next_range_check += 100;
+    }
   }
 
   if (i >= NUMBER_PIXELS) {
