@@ -5,10 +5,13 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUMBER_PIXELS, LEDPIN, NEO_GRB + NEO
 
 const int TrigPin = 3;
 const int EchoPin = 2;
+const int minCM = 20;
 float cm;
 int delayTime = 200;
 int wait = 500;
 int i = 0;
+
+bool state = false;
 
 void setup() {
   Serial.begin(9600);
@@ -20,17 +23,13 @@ void setup() {
 
 void rainbow7(uint16_t i) {
   // we use the modulo function with this
-  // strip.setPixelColor((i + 0) % NUMBER_PIXELS, 000, 000, 000);  // off
-  strip.setPixelColor((i + 1) % NUMBER_PIXELS, 025, 000, 025);  // violet
-  strip.setPixelColor((i + 2) % NUMBER_PIXELS, 255, 000, 255);  // indigo
-  strip.setPixelColor((i + 3) % NUMBER_PIXELS, 000, 000, 150);  // blue
-  strip.setPixelColor((i + 4) % NUMBER_PIXELS, 000, 150, 000);  // green
-  strip.setPixelColor((i + 5) % NUMBER_PIXELS, 255, 255, 000);  // yellow
-  strip.setPixelColor((i + 6) % NUMBER_PIXELS, 110, 070, 000);  // orange
-  strip.setPixelColor((i + 7) % NUMBER_PIXELS, 150, 000, 000);  // red
-  if (i < NUMBER_PIXELS * 2) {
-    rainbow7(i + 7);
-  }
+  strip.setPixelColor((i + 0) % NUMBER_PIXELS, 025, 000, 025);  // violet
+  strip.setPixelColor((i + 1) % NUMBER_PIXELS, 255, 000, 255);  // indigo
+  strip.setPixelColor((i + 2) % NUMBER_PIXELS, 000, 000, 150);  // blue
+  strip.setPixelColor((i + 3) % NUMBER_PIXELS, 000, 150, 000);  // green
+  strip.setPixelColor((i + 3) % NUMBER_PIXELS, 255, 255, 000);  // yellow
+  strip.setPixelColor((i + 4) % NUMBER_PIXELS, 110, 070, 000);  // orange
+  strip.setPixelColor((i + 6) % NUMBER_PIXELS, 150, 000, 000);  // red
 }
 
 float getCM() {
@@ -47,18 +46,26 @@ float getCM() {
 }
 
 void loop() {
-  for (int i = 0; i < NUMBER_PIXELS;) {
-    cm = getCM();
-    Serial.print("\t");
-    Serial.println(cm);
+  cm = getCM();
+  Serial.print("\t");
+  Serial.print(state);
+  Serial.print("\t");
+  Serial.println(cm);
 
-    if (cm < 100) {
-      rainbow7(i);
-      strip.show();
-      i++;
-    }
-    delay(500);
-    strip.clear();
-    strip.show();
+  if (cm < minCM) {
+    state = !state;
   }
+
+  if (i >= NUMBER_PIXELS) {
+    i = 0;
+  }
+
+  if (state) {
+    rainbow7(i);
+  } else {
+    strip.clear();
+  }
+
+  strip.show();
+  delay(300);
 }
