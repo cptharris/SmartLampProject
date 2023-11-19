@@ -10,7 +10,7 @@ float cm;
 const unsigned int wait = 300;
 int i = 0;
 
-bool state = false;
+unsigned int state = 0;
 bool stateChanged = false;
 
 void setup() {
@@ -21,7 +21,7 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
 }
 
-void rainbow7(uint16_t i) {
+void rainbow(uint16_t i) {
   // we use the modulo function with this
   for (int s = 0; s < NUMBER_PIXELS / 6; s++) {
     strip.setPixelColor((s * 6 + i + 0) % NUMBER_PIXELS, 255, 000, 255);  // indigo
@@ -30,6 +30,17 @@ void rainbow7(uint16_t i) {
     strip.setPixelColor((s * 6 + i + 3) % NUMBER_PIXELS, 255, 255, 000);  // yellow
     strip.setPixelColor((s * 6 + i + 4) % NUMBER_PIXELS, 110, 070, 000);  // orange
     strip.setPixelColor((s * 6 + i + 5) % NUMBER_PIXELS, 150, 000, 000);  // red
+  }
+}
+
+void christmas(uint16_t i) {
+  // https://coolors.co/da2c38-226f54-87c38f-f4f0bb-43291f
+  for (int s = 0; s < NUMBER_PIXELS / 5; s++) {
+    strip.setPixelColor((s * 5 + i + 0) % NUMBER_PIXELS, 218, 044, 056);  // poppy
+    strip.setPixelColor((s * 5 + i + 1) % NUMBER_PIXELS, 034, 111, 84);   // dark spring green
+    strip.setPixelColor((s * 5 + i + 2) % NUMBER_PIXELS, 135, 195, 143);  // pistachio
+    strip.setPixelColor((s * 5 + i + 3) % NUMBER_PIXELS, 244, 240, 187);  // lemon chiffon
+    strip.setPixelColor((s * 5 + i + 4) % NUMBER_PIXELS, 067, 041, 031);  // bistro
   }
 }
 
@@ -52,22 +63,31 @@ void loop() {
   Serial.print(state);
   Serial.print("\t");
   Serial.println(cm);
-  if (cm < minCM && !stateChanged) { // if cm is less than the trigger point && cm isn't being held low
-    state = !state;
+  if (cm < minCM && !stateChanged) {  // if cm is less than the trigger point && cm isn't being held low
+    state++;
     stateChanged = true;
-  } else if (cm >= minCM && stateChanged) { // if cm goes above trigger point and cm was being held low
+  } else if (cm >= minCM && stateChanged) {  // if cm goes above trigger point and cm was being held low
     stateChanged = false;
   }
 
-  if (i >= NUMBER_PIXELS) {
-    i = 0;
+  switch (state) {
+    case 1:
+      rainbow(i);
+      break;
+    case 2:
+      christmas(i);
+      break;
+    default:
+      state = 0;
+      strip.clear();
+      break;
   }
 
-  if (state) {
-    rainbow7(i);
+  if (state != 0) {
     i++;
-  } else {
-    strip.clear();
+    if (i >= NUMBER_PIXELS) {
+      i = 0;
+    }
   }
 
   strip.show();
