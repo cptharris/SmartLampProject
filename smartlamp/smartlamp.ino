@@ -3,21 +3,15 @@
 #define NUMBER_PIXELS 60
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUMBER_PIXELS, LEDPIN, NEO_GRB + NEO_KHZ800);
 
-const int TrigPin = 3;
-const int EchoPin = 2;
+const unsigned int TrigPin = 3;
+const unsigned int EchoPin = 2;
 const int minCM = 20;
 float cm;
-int delayTime = 200;
-int wait = 500;
+const unsigned int wait = 300;
 int i = 0;
 
 bool state = false;
-
-unsigned long next_range_check = millis();
-
-/*
-
-*/
+bool stateChanged = false;
 
 void setup() {
   Serial.begin(9600);
@@ -53,18 +47,16 @@ float getCM() {
 }
 
 void loop() {
-  if (true || millis() >= next_range_check) {
-    cm = getCM();
-    Serial.print("\t");
-    Serial.print(state);
-    Serial.print("\t");
-    Serial.println(cm);
-    if (cm < minCM) {
-      state = !state;
-      next_range_check += 500;
-    } else {
-      next_range_check += 100;
-    }
+  cm = getCM();
+  Serial.print("\t");
+  Serial.print(state);
+  Serial.print("\t");
+  Serial.println(cm);
+  if (cm < minCM && !stateChanged) { // if cm is less than the trigger point && cm isn't being held low
+    state = !state;
+    stateChanged = true;
+  } else if (cm >= minCM && stateChanged) { // if cm goes above trigger point and cm was being held low
+    stateChanged = false;
   }
 
   if (i >= NUMBER_PIXELS) {
@@ -79,5 +71,5 @@ void loop() {
   }
 
   strip.show();
-  delay(300);
+  delay(wait);
 }
