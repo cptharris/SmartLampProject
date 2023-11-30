@@ -34,13 +34,14 @@ void rainbow(uint16_t i) {
 }
 
 void christmas(uint16_t i) {
-  // https://coolors.co/da2c38-226f54-87c38f-f4f0bb-43291f
+  // https://coolors.co/da2c38-226f54-87c38f-f4f0bb-43291f\
+  // https://coolors.co/f7f7f0-080712-0031a5-2e3d6a-9badcc
   for (int s = 0; s < NUMBER_PIXELS / 5; s++) {
-    strip.setPixelColor((s * 5 + i + 0) % NUMBER_PIXELS, 218, 044, 056);  // poppy
-    strip.setPixelColor((s * 5 + i + 1) % NUMBER_PIXELS, 034, 111, 84);   // dark spring green
-    strip.setPixelColor((s * 5 + i + 2) % NUMBER_PIXELS, 135, 195, 143);  // pistachio
-    strip.setPixelColor((s * 5 + i + 3) % NUMBER_PIXELS, 244, 240, 187);  // lemon chiffon
-    strip.setPixelColor((s * 5 + i + 4) % NUMBER_PIXELS, 067, 041, 031);  // bistro
+    strip.setPixelColor((s * 5 + i + 0) % NUMBER_PIXELS, 247, 247, 240);  // baby powder
+    strip.setPixelColor((s * 5 + i + 1) % NUMBER_PIXELS, 8, 7, 18);       // rich black
+    strip.setPixelColor((s * 5 + i + 2) % NUMBER_PIXELS, 0, 49, 165);     // international klein blue
+    strip.setPixelColor((s * 5 + i + 3) % NUMBER_PIXELS, 46, 61, 106);    // delft blue
+    strip.setPixelColor((s * 5 + i + 4) % NUMBER_PIXELS, 155, 173, 204);  // powder blue
   }
 }
 
